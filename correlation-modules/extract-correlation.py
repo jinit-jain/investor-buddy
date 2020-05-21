@@ -2,7 +2,8 @@ import csv
 import correlation as corr
 import plot_map as plm
 # csv file name 
-filename = "/home/jinit/Downloads/EQUITY_L.csv"
+# dit_path = 
+filename = "EQUITY_L.csv"
 # filename = "correlation-matrix.csv"
 
 # initializing the titles, symbols and rows list 
@@ -23,6 +24,8 @@ with open(filename, 'r') as csvfile:
         rows.append(row)
 
 for row in rows:
+    # if row[0][0] == 'B':
+    #     break
     symbols.append(row[0] + '.NS')
 
 df, xPoints = corr.correlation(symbols)

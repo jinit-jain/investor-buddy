@@ -281,7 +281,7 @@ class TickerBase():
 
         # holders
         url = "{}/{}/holders".format(self._scrape_url, self.ticker)
-        print(url)
+        # print(url)
         try:
             holders = _pd.read_html(url)
             self._major_holders = holders[0]
@@ -292,8 +292,9 @@ class TickerBase():
             if '% Out' in self._institutional_holders:
                 self._institutional_holders['% Out'] = self._institutional_holders[
                     '% Out'].str.replace('%', '').astype(float)/100
-        except Exception: 
-            print('xxxxxxxx')
+        except Exception:
+            pass
+            # print('Problem in reading Major or Institutional Holders data')
         
         # sustainability
         d = {}
@@ -318,8 +319,12 @@ class TickerBase():
         for item in items:
             if isinstance(data.get(item), dict):
                 self._info.update(data[item])
-
-        self._info['regularMarketPrice'] = self._info['regularMarketOpen']
+        
+        try:
+            self._info['regularMarketPrice'] = self._info['regularMarketOpen']
+        except KeyError:
+            pass
+            # print("regularMarketOpen data not found")
         self._info['logo_url'] = ""
         try:
             domain = self._info['website'].split(
