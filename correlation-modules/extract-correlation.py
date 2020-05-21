@@ -3,7 +3,7 @@ import correlation as corr
 import plot_map as plm
 # csv file name 
 # dit_path = 
-filename = "EQUITY_L.csv"
+filename = "finalBetaDB.csv"
 # filename = "correlation-matrix.csv"
 
 # initializing the titles, symbols and rows list 
