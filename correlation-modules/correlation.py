@@ -3,8 +3,16 @@ from scipy.stats import pearsonr
 import yfinance.__init__ as yf
 import pandas as pd
 from math import isnan
+from csv import writer
 
 yf.pdr_override()
+
+DIR = 'csv/'
+
+def add_to_csv(file_name, rows):
+    with open(file_name, 'a+', newline='') as write_obj:
+        csv_writer = writer(write_obj)
+        csv_writer.writerows(rows)
 
 def filter(stocks):
     stockList = []
@@ -25,24 +33,7 @@ def filter(stocks):
 
     return stockList
 
-def correlation (stocks):
-    #filter the list
-    try:
-        data = pd.read_csv('stock_history.csv', encoding='utf-8')
-    except FileNotFoundError:
-        stocks = filter(stocks)
-        print("After applying filter: ", len(stocks))
-    
-        # download dataframe
-        unfiltered_data = pdr.get_data_yahoo(stocks, start="2017-06-01", end="2019-05-31", group_by="ticker")
-        # print(unfiltered_data)
-        data = pd.DataFrame()
-        for column in unfiltered_data.columns:
-            # print(column)
-            if column[1] == 'Close':
-                data[column[0]] = unfiltered_data[column]  
-        data.to_csv('stock_history.csv', index=False, header=True)
-        
+def filter_data (data):
     stocks = data.columns
     # filter data
     for stock in stocks:
@@ -62,7 +53,50 @@ def correlation (stocks):
             data[stock] = close
             if data[stock].isnull().mean() != 0:
                 print(stock, data[stock].isnull().mean())
+    return data
+    
+def correlation (stocks):
+    #filter the list
+    try:
+        data = pd.read_csv('{}stock_history.csv'.format(DIR), encoding='utf-8')
+    except FileNotFoundError:
+        stocks = filter(stocks)
+        print("After applying filter: ", len(stocks))
+    
+        # download dataframe
+        unfiltered_data = pdr.get_data_yahoo(stocks, start="2017-06-01", end="2019-05-31", group_by="ticker")
+        # print(unfiltered_data)
+        data = pd.DataFrame()
+        for column in unfiltered_data.columns:
+            # print(column)
+            if column[1] == 'Close':
+                data[column[0]] = unfiltered_data[column]  
+        filter_data(data)
+        data.to_csv('{}stock_history.csv'.format(DIR), index=False, header=True)
+        
+    # stocks = data.columns
+    # # filter data
+    # for stock in stocks:
+    #     stock_mean_nan = data[stock].isnull().mean()
+    #     # If stock history has 10% values as null values, remove that stock
+    #     if stock_mean_nan >= 0.1:
+    #         data.pop(stock)
+    #     else:
+    #         close = [float(num) for num in data[stock]]
+    #         for i in range(len(close)):
+    #             if isnan(close[i]):
+    #                 if i==0:
+    #                     close[i] = data[stock].sum()/len(close)
+    #                 else:
+    #                     close[i] = close[i-1]
+    #         # print(close)   
+    #         data[stock] = close
+    #         if data[stock].isnull().mean() != 0:
+    #             print(stock, data[stock].isnull().mean())
             
+    # data.to_csv('{}stock_history.csv'.format(DIR), index=False, header=True)
+        
+    
     #initialize dictionary
     stocks = data.columns
     corr_dict = {}
@@ -72,7 +106,7 @@ def correlation (stocks):
     #intialize dataframe
     df = pd.DataFrame(corr_dict, index=stocks)
     xPoints = []
-
+    xPointrows = []
     # calculate Pearson's correlation between all the listed companies
     for i in range(len(stocks)):
         
@@ -81,8 +115,14 @@ def correlation (stocks):
             df[stocks[i]][stocks[j]] = '%.2f'%(corr)
             df[stocks[j]][stocks[i]] = '%.2f'%(corr)
             xPoints.append('%.1f'%(corr))
+            xPointrows.append([xPoints[-1]])
             # print(stocks[i], stocks[j], df[stocks[i]][stocks[j]])
-
+    
+    xpoints_path = DIR + 'xPoints.csv'
+    try:
+        add_to_csv(xpoints_path, xPointrows)
+    except Exception:
+        print('xpoints file not created')
     return df, xPoints
 
 # if __name__ == "__main__":

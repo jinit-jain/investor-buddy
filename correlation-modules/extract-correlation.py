@@ -3,6 +3,7 @@ import correlation as corr
 import plot_map as plm
 # csv file name 
 # dit_path = 
+DIR = 'csv/'
 filename = "finalBetaDB.csv"
 # filename = "correlation-matrix.csv"
 
@@ -31,4 +32,4 @@ for row in rows:
 df, xPoints = corr.correlation(symbols)
 print(df)
 plm.plot_map(xPoints)
-df.to_csv('correlation-matrix.csv')
+df.to_csv('{}correlation-matrix.csv'.format(DIR))
