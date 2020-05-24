@@ -12,9 +12,7 @@ let client = new NewsSearchAPIClient(credentials);
 router.get('/', (req, res, next) => {
 
     client.newsOperations.search(searchTerm,{market: 'en-in'}).then((result) => {
-        return res.send({
-            news: result.value
-        })
+        return res.json(result.value)
     }).catch((err) => {
         return res.send(400).send({
             error: err
