@@ -1,2 +1,6 @@
-# ignore all pycache
+# ignore folders
 __pycache__
+node_modules
+
+#ignore files
+Tp.js
