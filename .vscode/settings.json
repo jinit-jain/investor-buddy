@@ -1,4 +1,8 @@
 {
     "appService.defaultWebAppToDeploy": "/subscriptions/7cd3465c-ebd8-4c12-9473-a709c42b305e/resourceGroups/ResourceGroup-investor-buddy/providers/Microsoft.Web/sites/WebAppSvc-investor-buddy",
-    "appService.deploySubpath": "expressAppServer"
+    "appService.deploySubpath": "expressAppServer",
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ]
 }
