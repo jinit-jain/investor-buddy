@@ -1,6 +1,7 @@
 # ignore folders
 __pycache__
 node_modules
+test_flask
 
 #ignore files
 Tp.js
