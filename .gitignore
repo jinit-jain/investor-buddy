@@ -2,6 +2,7 @@
 __pycache__
 node_modules
 test_flask
+.vscode
 
 #ignore files
 Tp.js
