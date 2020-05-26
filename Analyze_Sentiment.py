@@ -1,13 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # Azure hackathon
-
-# ## Import
-
-# In[1]:
-
-
 import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -70,12 +60,6 @@ def extract_article (url):
 
 document = extract_article("https://www.cnbc.com/2020/05/22/coronavirus-goldman-sachs-on-india-growth-gdp-forecast.html")
 
-# In[28]:
-
-
-# ## Process Document
-
-# In[6]:
 
 
 def nltk_process(document):
@@ -120,12 +104,6 @@ def nltk_eval(document):
     # return names, organization, location, address, other
 
 
-# ## Setting up one time company and subsector loading
-
-# ### Utilities function
-
-# In[7]:
-
 
 def clean_companies(companies):
     cleaned_companies = []
@@ -151,6 +129,7 @@ def clean_subsectors(subsector):
 
 
 def preprocess_data():
+    global df, cleaned_companies, cleaned_subsectors
     df = pd.read_csv('finalBetaDB.csv')
     df.rename(columns={' Sector': 'Sector', ' Sub-sector':'Subsector'}, inplace=True)
     df = df.replace(np.nan, '', regex=True)
@@ -169,9 +148,9 @@ def preprocess_data():
 
 
 # In[48]:
+preprocess_data()
 
-
-df, cleaned_companies, cleaned_subsectors = preprocess_data()
+#df, cleaned_companies, cleaned_subsectors = preprocess_data()
 
 
 # In[10]:
@@ -290,7 +269,7 @@ def distribute_polarity(polarity_of_organ, organ_to_subsector, organ_to_company)
 
 
 def find_subsector_company_sentiment_json_format(document):
-    #document = " ".join(document)
+    document = " ".join(document)
     organization, _ = nltk_eval(document)
     print(organization)
     organ_to_subsector = find_subsectors(organization, cleaned_subsectors)
