@@ -9,7 +9,7 @@ function App(){
         <h1>InvestorBuddy</h1>
       </center>
       
-      <DropDown />
+    <DropDown />
     </div>
   )
 }
