@@ -118,7 +118,8 @@ def clean_companies(companies):
         elif x.endswith('ltd.'):
             x = x[:-5]
         else:
-            print(x)
+            #print(x)
+            pass
         cleaned_companies.append(x)
     return cleaned_companies
 
@@ -297,7 +298,7 @@ def make_news_output_format(subsector_to_polarity, company_to_polarity, df):
     news_output['Params'] = list()
     for key, value in subsector_to_polarity.items():
         item_type = 'Commodity'
-        item_symbol = df[df['cleaned_subsector'] == key]['Symbol'][0]
+        item_symbol = df[df['cleaned_subsector'] == key]['Symbol'].values[0]
         item_sentiment = value
         temp = dict()
         temp['label'] =item_type
@@ -307,7 +308,7 @@ def make_news_output_format(subsector_to_polarity, company_to_polarity, df):
     
     for key, value in company_to_polarity.items():
         item_type = 'Organization'
-        item_symbol = df[df['cleaned_companies'] == key]['Symbol'] + '.NS'
+        item_symbol = df[df['cleaned_companies'] == key]['Symbol'].values[0] + '.NS'
         item_sentiment = value
         temp = dict()
         temp['label'] =item_type
@@ -318,7 +319,7 @@ def make_news_output_format(subsector_to_polarity, company_to_polarity, df):
     return news_output
 
 output_data = find_subsector_company_sentiment_json_format(document)  
-
+print(output_data)
 
 # In[44]:
 
