@@ -289,7 +289,7 @@ def distribute_polarity(polarity_of_organ, organ_to_subsector, organ_to_company)
 # In[31]:
 
 
-def find_subsector_company_sentiment(document):
+def find_subsector_company_sentiment_json_format(document):
     #document = " ".join(document)
     organization, _ = nltk_eval(document)
     print(organization)
@@ -302,7 +302,9 @@ def find_subsector_company_sentiment(document):
     polarity_of_organ = find_sentiment_of_context(document, organ_to_sentenceid, total_sentences)
     subsector_to_polarity, company_to_polarity = distribute_polarity(polarity_of_organ, organ_to_subsector, organ_to_company)
     
-    return subsector_to_polarity, company_to_polarity
+    output_format = make_news_output_format(subsector_to_polarity, company_to_polarity, df)
+    
+    return output_format
 
 
 # In[32]:
@@ -336,8 +338,7 @@ def make_news_output_format(subsector_to_polarity, company_to_polarity, df):
         
     return news_output
 
-subsector_to_polarity, company_to_polarity = find_subsector_company_sentiment(document)        
-make_news_output_format(subsector_to_polarity, company_to_polarity, df)
+output_data = find_subsector_company_sentiment_json_format(document)  
 
 
 # In[44]:
