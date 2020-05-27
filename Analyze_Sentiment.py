@@ -61,12 +61,12 @@ def extract_article (url):
 document = extract_article("https://www.cnbc.com/2020/05/22/coronavirus-goldman-sachs-on-india-growth-gdp-forecast.html")
 
 
-
 def nltk_process(document):
     document = " ".join([i for i in document.split() if i not in stop])
     sentences = nltk.sent_tokenize(document)
     sentences = [nltk.word_tokenize(sent) for sent in sentences]
     sentences = [nltk.pos_tag(sent) for sent in sentences]
+    #print(sentences)
     return sentences
 
 def nltk_eval(document):
@@ -81,6 +81,14 @@ def nltk_eval(document):
     for tagged_sentence in nltk_process(document):
             for chunk in nltk.ne_chunk(tagged_sentence):
                 if type(chunk) == nltk.tree.Tree:
+                    #print((chunk))
+                    if chunk.label() == 'PERSON':
+                        ## Organization is found
+                        temp = (' '.join([c[0] for c in chunk])).lower()
+                        if temp in organization:
+                            organization[temp] += 1
+                        else:
+                            organization[temp] = 1
                     if chunk.label() == 'ORGANIZATION':
                         ## Organization is found
                         temp = (' '.join([c[0] for c in chunk])).lower()
@@ -98,7 +106,9 @@ def nltk_eval(document):
     location = {k: v for k, v in sorted(location.items(), key=lambda item: item[1], reverse=True)}
     
     print("Organizations:\n",list(organization.keys()))
-    # print("Location:\n",list(location.keys()))
+    print("Location:\n",list(location.keys()))
+    
+    organization.update(location)
                             
     return organization, location
     # return names, organization, location, address, other
@@ -149,7 +159,7 @@ def preprocess_data():
 
 
 # In[48]:
-preprocess_data()
+##  preprocess_data()
 
 #df, cleaned_companies, cleaned_subsectors = preprocess_data()
 
@@ -270,7 +280,7 @@ def distribute_polarity(polarity_of_organ, organ_to_subsector, organ_to_company)
 
 
 def find_subsector_company_sentiment_json_format(document):
-    document = " ".join(document)
+    #document = " ".join(document)
     organization, _ = nltk_eval(document)
     print(organization)
     organ_to_subsector = find_subsectors(organization, cleaned_subsectors)
@@ -298,7 +308,7 @@ def make_news_output_format(subsector_to_polarity, company_to_polarity, df):
     news_output['Params'] = list()
     for key, value in subsector_to_polarity.items():
         item_type = 'Commodity'
-        item_symbol = df[df['cleaned_subsector'] == key]['Symbol'].values[0]
+        item_symbol = df[df['cleaned_subsectors'] == key]['Symbol'].values[0]
         item_sentiment = value
         temp = dict()
         temp['label'] =item_type
@@ -318,8 +328,8 @@ def make_news_output_format(subsector_to_polarity, company_to_polarity, df):
         
     return news_output
 
-output_data = find_subsector_company_sentiment_json_format(document)  
-print(output_data)
+#### output_data = find_subsector_company_sentiment_json_format(document)  
+#print(output_data)
 
 # In[44]:
 
