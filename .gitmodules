@@ -4,3 +4,7 @@
 [submodule "flask-app"]
 	path = flask-app
 	url = https://github.com/Jinitjain/flask-app
+[submodule "investor-buddy-react-app"]
+	path = investor-buddy-react-app
+	url = https://github.com/Jinitjain/investor-buddy-react-app
+	branch = master
